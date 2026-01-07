@@ -9,12 +9,25 @@ jobs:
       - name: Clone the repository
         uses: actions/checkout@v6.0.1
       - name: Use docker build
-        uses: docker/build-push-action@v3.0.0
+        run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker build -t my-image .
+          docker push --all-tags my-image
 
   Deploy:
     name: Deploy to remote server
     needs: Build
     runs-on: ubuntu-24.04
     steps:
-      - name: Deploy to remote server
-        run: echo "Deploying..."
+      - name: SSH to the remote server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            docker pull my-image
+            docker-compose down
+            docker-compose up -d
+      - name: Test the deployment
+        run: curl ${{ secrets.SSH_HOST }}
