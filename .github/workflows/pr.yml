@@ -1,0 +1,23 @@
+name: Pull request workflow
+on:
+  pull_request:
+    types: [ opened ]
+  push:
+jobs:
+  Validation:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Clone the repository
+        uses: actions/checkout@v6.0.1
+
+      - name: Install uv and dependencies
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: 0.6.5
+          python-version: 3.12
+
+      - name: Run linter
+        run: uv run ruff check .
+
+      - name: Run tests
+        run: uv run pytest
