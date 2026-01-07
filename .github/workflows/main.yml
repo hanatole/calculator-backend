@@ -10,24 +10,6 @@ jobs:
         uses: actions/checkout@v6.0.1
       - name: Use docker build
         run: |
-          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker build -t my-image .
-          docker push --all-tags my-image
-
-  Deploy:
-    name: Deploy to remote server
-    needs: Build
-    runs-on: ubuntu-24.04
-    steps:
-      - name: SSH to the remote server
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            docker pull my-image
-            docker-compose down
-            docker-compose up -d
-      - name: Test the deployment
-        run: curl ${{ secrets.SSH_HOST }}
+          docker login -u ${{ vars.REGISTRY_USERNAME }} -p ${{ secrets.REGISTRY_TOKEN }}
+          docker build -t ${{ vars.REGISTRY_USERNAME }}/calculator-backend:latest .
+          docker push --all-tags ${{ vars.REGISTRY_USERNAME }}/calculator-backend
