@@ -1,0 +1,14 @@
+name: Operation workflow
+on:
+  - push
+jobs:
+  first:
+    runs-on: ubuntu-24.04
+    steps:
+      - run: echo "This is the first job!"
+
+  second:
+    runs-on: ubuntu-24.04
+    steps:
+      - run: echo "This is the first job of the second job!"
+      - run: echo "This is the second step of the second job!"
