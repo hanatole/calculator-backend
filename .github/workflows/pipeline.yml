@@ -2,13 +2,14 @@ name: Operation workflow
 on:
   - push
 jobs:
-  first:
+  Validation:
     runs-on: ubuntu-24.04
     steps:
-      - run: echo "This is the first job!"
-
-  second:
-    runs-on: ubuntu-24.04
-    steps:
-      - run: echo "This is the first job of the second job!"
-      - run: echo "This is the second step of the second job!"
+      - name: Checkout
+        uses: actions/checkout@v6.0.1
+      - name: Setup Python
+        uses: durandtibo/setup-venv-uv-action@v0.0.3
+        with:
+          python-version: 3.12
+      - name: Run linter
+        run: uv run ruff check .
