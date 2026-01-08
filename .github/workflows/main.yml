@@ -1,15 +1,22 @@
 name: Main workflow
 on:
-  pull_request_review
+  pull_request:
+    branches: [ main ]
+    types: [ closed ]
+  workflow_dispatch:
 jobs:
   Build:
     runs-on: ubuntu-24.04
-    if: github.event.review.state == 'approved'
+    if: |
+      github.event.pull_request.merged == true || github.event_name == 'workflow_dispatch'
     steps:
-      - name: Clone the repository
+      - name: Checkout repository
         uses: actions/checkout@v6.0.1
-      - name: Use docker build
+
+      - name: Login to Docker registry
+        run: echo "${{ secrets.REGISTRY_TOKEN }}" | docker login -u "${{ vars.REGISTRY_USERNAME }}" --password-stdin
+
+      - name: Build and push Docker image
         run: |
-          docker login -u ${{ vars.REGISTRY_USERNAME }} -p ${{ secrets.REGISTRY_TOKEN }}
           docker build -t ${{ vars.REGISTRY_USERNAME }}/calculator-backend:latest .
           docker push --all-tags ${{ vars.REGISTRY_USERNAME }}/calculator-backend
