@@ -15,7 +15,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "rest_framework"
+    "rest_framework",
+    "core.apps.CoreConfig",
 ]
 
 MIDDLEWARE = [
@@ -78,3 +79,5 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = "static/"
+
+REST_FRAMEWORK = {}

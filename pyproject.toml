@@ -13,3 +13,7 @@ dev = [
     "pytest-django>=4.11.1",
     "ruff>=0.14.10",
 ]
+
+[pytest]
+DJANGO_SETTINGS_MODULE = "conf.settings"
+python_files = ["test_*.py"]
