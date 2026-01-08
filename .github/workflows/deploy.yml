@@ -8,5 +8,6 @@ jobs:
       service_name: backend
       docker_image: ahagbes/calculator-backend:latest
     secrets:
+      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
       SERVER_HOST: ${{ secrets.SERVER_HOST }}
       SERVER_USER: ${{ secrets.SERVER_USER }}
