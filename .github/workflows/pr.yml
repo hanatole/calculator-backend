@@ -1,0 +1,22 @@
+name: Pull request workflow
+on: [ pull_request, workflow_dispatch ]
+jobs:
+  Validation:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Clone the repository
+        uses: actions/checkout@v6.0.1
+
+      - name: Install uv and dependencies
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: 0.9.22
+          python-version: 3.12
+
+      - name: Run linter
+        run: uv run ruff check .
+
+      - name: Run tests
+        run: |
+          export DJANGO_SETTINGS_MODULE=conf.settings
+          uv run pytest

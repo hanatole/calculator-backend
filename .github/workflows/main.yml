@@ -1,0 +1,15 @@
+name: Main workflow
+on:
+  pull_request_review
+jobs:
+  Build:
+    runs-on: ubuntu-24.04
+    if: github.event.review.state == 'approved'
+    steps:
+      - name: Clone the repository
+        uses: actions/checkout@v6.0.1
+      - name: Use docker build
+        run: |
+          docker login -u ${{ vars.REGISTRY_USERNAME }} -p ${{ secrets.REGISTRY_TOKEN }}
+          docker build -t ${{ vars.REGISTRY_USERNAME }}/calculator-backend:latest .
+          docker push --all-tags ${{ vars.REGISTRY_USERNAME }}/calculator-backend
