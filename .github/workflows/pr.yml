@@ -1,5 +1,5 @@
 name: Pull request workflow
-on: pull_request
+on: [ pull_request, workflow_dispatch ]
 jobs:
   Validation:
     runs-on: ubuntu-24.04
