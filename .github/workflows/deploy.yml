@@ -1,9 +1,9 @@
-name: Deploy workflow
+name: Deploy backend
 on: workflow_dispatch
 
 jobs:
   Deploy:
     uses: hanatole/calculator-deployment/.github/workflows/deploy.yml@main
     with:
-      SERVICE_NAME: backend
-      DOCKER_IMAGE: ahagbes/calculator-backend:latest
+      service_name: backend
+      docker_image: ahagbes/calculator-backend:latest
