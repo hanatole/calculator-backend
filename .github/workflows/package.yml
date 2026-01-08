@@ -5,7 +5,7 @@ on:
     types: [ closed ]
   workflow_dispatch:
 jobs:
-  Build:
+  Package:
     runs-on: ubuntu-24.04
     if: |
       github.event.pull_request.merged == true || github.event_name == 'workflow_dispatch'
@@ -20,17 +20,3 @@ jobs:
         run: |
           docker build -t ${{ vars.REGISTRY_USERNAME }}/calculator-backend:latest .
           docker push --all-tags ${{ vars.REGISTRY_USERNAME }}/calculator-backend
-
-  Deploy:
-    runs-on: ubuntu-24.04
-    needs: Build
-    steps:
-      - name: SSH to remote server
-        uses: garygrossgarten/github-action-ssh@release
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          privateKey: ${{ secrets.SSH_PRIVATE_KEY }}
-          command: |
-            docker pull ${{ vars.REGISTRY_USERNAME }}/calculator-backend:latest
-            docker images | grep calculator-backend
