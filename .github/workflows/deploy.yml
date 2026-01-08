@@ -6,7 +6,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Deploy backend
-        uses: "hanatole/calculator-deployment/.github/workflows/deploy.yml@main"
+        uses: hanatole/calculator-deployment/.github/workflows/deploy.yml@main
         with:
           SERVICE_NAME: backend
           DOCKER_IMAGE: ahagbes/calculator-backend:latest
