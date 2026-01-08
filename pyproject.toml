@@ -6,6 +6,7 @@ requires-python = ">=3.12"
 dependencies = [
     "django>=6.0.1",
     "djangorestframework>=3.16.1",
+    "gunicorn>=23.0.0",
 ]
 
 [dependency-groups]
@@ -13,3 +14,7 @@ dev = [
     "pytest-django>=4.11.1",
     "ruff>=0.14.10",
 ]
+
+[pytest]
+DJANGO_SETTINGS_MODULE = "conf.settings"
+python_files = ["test_*.py"]
