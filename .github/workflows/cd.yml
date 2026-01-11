@@ -1,0 +1,37 @@
+name: Continuous deployment
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  package-image:
+    runs-on: ubuntu-24.04
+    outputs:
+      image_tag: ${{ steps.image_tag.outputs.tag }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.1
+
+      - name: Compute image tags
+        id: image_tag
+        run: |
+          echo "tag=${{vars.REGISTRY_USER}}/calculator-backend:{{ $GITHUB_SHA::7}}" >> $GITHUB_OUTPUT
+
+      - name: Build and Push Docker image
+        run: |
+          docker build -t ${{steps.image_tag.outputs.tag}} .
+          echo "${{ secrets.REGISTRY_TOKEN }}" | docker login -u "${{ vars.REGISTRY_USER }}" --password-stdin
+          docker push ${{steps.image_tag.outputs.tag}}
+
+  deploy-to-production:
+    needs: package-image
+    uses: hanatole/deployment/.github/workflows/cd.yml@main
+    with:
+      project_directory: "/srv/calculator/backend"
+      service_name: "backend"
+      service_port: 8000
+      traefik_rule: "Host(`api.ah.imc.chillo.fr`)"
+      network_name: 'traefiknetwork'
+      docker_image: ${{ needs.Package.outputs.image_tag }}
+    secrets: inherit

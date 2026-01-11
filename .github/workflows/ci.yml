@@ -1,10 +1,11 @@
-name: Pull request workflow
-on: [ pull_request, workflow_dispatch ]
+name: Continuous integration
+on: pull_request
+
 jobs:
   Validation:
     runs-on: ubuntu-24.04
     steps:
-      - name: Clone the repository
+      - name: Checkout repository
         uses: actions/checkout@v6.0.1
 
       - name: Install uv and dependencies
