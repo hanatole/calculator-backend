@@ -2,8 +2,10 @@ from rest_framework import serializers
 
 
 class OperationSerializer(serializers.Serializer):
-    operator = serializers.ChoiceField(choices=["+", "-", "*", "/"],
-                                       error_messages={"invalid_choice": "Unsupported operator"})
+    operator = serializers.ChoiceField(
+        choices=["+", "-", "*", "/"],
+        error_messages={"invalid_choice": "Unsupported operator"},
+    )
     operand_one = serializers.IntegerField()
     operand_two = serializers.IntegerField()
 

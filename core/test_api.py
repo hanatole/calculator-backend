@@ -1,6 +1,13 @@
 import pytest
-from rest_framework.test import APIClient
 from django.urls import reverse
+from rest_framework.test import APIClient
+
+
+def test_api_health_check():
+    client = APIClient()
+    response = client.get(reverse("health_check"))
+    assert response.status_code == 200
+    assert response.json()["status"] == "ok"
 
 
 @pytest.mark.parametrize(
@@ -14,10 +21,8 @@ from django.urls import reverse
 )
 def test_calculate_parametrized(a, b, operator, expected):
     client = APIClient()
-    url = reverse("calculate")
-
     response = client.post(
-        url,
+        reverse("calculate"),
         {"operand_one": a, "operand_two": b, "operator": operator},
         format="json",
     )
@@ -30,12 +35,13 @@ def test_calculate_parametrized(a, b, operator, expected):
     "a,b,operator,expected",
     [
         (1, 2, "plus", "Unsupported operator"),
-        (4, 0, "/", "Division by zero is not allowed")
+        (4, 0, "/", "Division by zero is not allowed"),
     ],
 )
 def test_calculate_invalid_operation(a, b, operator, expected):
     client = APIClient()
-    url = reverse("calculate")
-    response = client.post(url, {"operand_one": a, "operand_two": b, "operator": operator})
+    response = client.post(
+        reverse("calculate"), {"operand_one": a, "operand_two": b, "operator": operator}
+    )
     assert response.status_code == 400
     assert list(response.json().values())[0][0] == expected
