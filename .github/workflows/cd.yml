@@ -5,7 +5,7 @@ on:
       - main
 
 jobs:
-  package-image:
+  build:
     runs-on: ubuntu-24.04
     outputs:
       image_tag: ${{ steps.image_tag.outputs.tag }}
@@ -25,7 +25,7 @@ jobs:
           docker push ${{steps.image_tag.outputs.tag}}
 
   deploy-to-production:
-    needs: package-image
+    needs: build
     uses: hanatole/deployment/.github/workflows/cd.yml@main
     with:
       project_directory: "/srv/calculator/backend"
@@ -33,5 +33,5 @@ jobs:
       service_port: 8000
       traefik_rule: "Host(`api.ah.imc.chillo.fr`)"
       network_name: 'traefiknetwork'
-      docker_image: ${{ needs.Package.outputs.image_tag }}
+      docker_image: ${{ needs.build.outputs.image_tag }}
     secrets: inherit
