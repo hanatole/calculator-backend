@@ -1,6 +1,14 @@
 import pytest
-from rest_framework.test import APIClient
 from django.urls import reverse
+from rest_framework.test import APIClient
+
+
+def test_api_health_check():
+    client = APIClient()
+    url = reverse("health_check")
+    response = client.get(url)
+    assert response.status_code == 200
+    assert response.json()["status"] == "ok"
 
 
 @pytest.mark.parametrize(

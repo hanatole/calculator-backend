@@ -1,6 +1,12 @@
-from core.serializers import OperationSerializer, ResultSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+
+from core.serializers import OperationSerializer, ResultSerializer
+
+
+@api_view(["GET"])
+def health_check(request):
+    return Response({"status": "ok"}, status=200)
 
 
 @api_view(["POST"])
